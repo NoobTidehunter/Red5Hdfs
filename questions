@@ -1,0 +1,25 @@
+1） 
+	private long channelSize;  	---->>	private long fileSize;
+	channelSize = channel.size(); 	---->>	fileSize = fstatus.getLen();
+ 
+2）
+	channel.position()		---->>	fsdis.getPos()
+	
+
+3）
+	channel.position(pos);		---->>	fsdis.seek(pos);
+
+
+4）
+	public FLVReader(File f, boolean generateMetadata) throws IOException {
+	.......
+	}
+	中的“File f”的内容是怎么样的？
+
+
+5）
+6）
+7）
+8）
+9）
+
