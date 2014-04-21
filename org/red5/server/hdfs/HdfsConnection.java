@@ -10,19 +10,21 @@ import org.apache.hadoop.fs.Path;
 
 
 public class HdfsConnection{
-	private static String HDFS_ADDRESS = "hdfs://192.168.2.245:9000/";
+	private static String HDFS_ADDRESS = "hdfs://192.168.137.246:9000/";
 	private FSDataInputStream hdfsInStream;
 	private FileSystem fs;
 	private FileStatus fileStatus;
 	private Configuration conf;
 	private long fileSize;
+	private String fileName;
 	
 	public HdfsConnection() {
 		conf = new Configuration();			
 	}
 	
-	public FSDataInputStream getHdfsInputStream(String filePath) {
-		String uri = HDFS_ADDRESS + filePath;	
+	public FSDataInputStream getHdfsInputStream(String fileName) {
+		this.fileName = fileName;
+		String uri = HDFS_ADDRESS + this.fileName;	
 		Path hdfsPath = new Path(uri);
 		try {
 			fs = FileSystem.get(URI.create(uri), conf);
@@ -35,6 +37,14 @@ public class HdfsConnection{
 		
 		return hdfsInStream;
 	}
+	
+	public String getFullFileName() {
+		if (fs != null) {
+			return HDFS_ADDRESS + this.fileName;
+		}
+		
+		return null;
+	}	
 	
 	public long size() {
 		return fileSize;

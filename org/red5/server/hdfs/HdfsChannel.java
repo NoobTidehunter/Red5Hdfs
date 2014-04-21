@@ -46,4 +46,8 @@ public class HdfsChannel implements ReadableByteChannel {
 	public void position(long pos) throws IOException{
 		hdfsConn.position(pos);
 	}
+	
+	public String getFullFileName() {
+		return hdfsConn.getFullFileName();
+	}
 }

@@ -19,7 +19,6 @@
 package org.red5.io.flv.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -44,6 +43,7 @@ import org.red5.io.flv.IKeyFrameDataAnalyzer;
 import org.red5.io.object.Deserializer;
 import org.red5.io.object.Serializer;
 import org.red5.io.utils.IOUtils;
+import org.red5.server.hdfs.HdfsChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,20 @@ import org.slf4j.LoggerFactory;
  * @author Paul Gregoire, (mondain@gmail.com)
  */
 public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer {
-
+	
+	HdfsChannel channel;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Logger
 	 */
@@ -72,12 +85,12 @@ public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer
 	/**
 	 * File input stream
 	 */
-	private FileInputStream fis;
+	//private FileInputStream fis;
 
 	/**
 	 * File channel
 	 */
-	private FileChannel channel;
+	//private ReadableByteChannel channel;
 
 	private long channelSize;
 
@@ -147,6 +160,7 @@ public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer
 	 * @throws IOException on error
 	 */
 	public FLVReader(File f, boolean generateMetadata) throws IOException {
+		/*
 		if (null == f) {
 			log.warn("Reader was passed a null file");
 			log.debug("{}", org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(this));
@@ -159,15 +173,34 @@ public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer
 		in = null;
 		fillBuffer();
 		postInitialize();
+		
+		*/
+			if (null == f) {
+			log.warn("Reader was passed a null file");
+			log.debug("{}", org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(this));
+		}
+		this.file = f;
+		//this.fis = new FileInputStream(f);
+		this.generateMetadata = generateMetadata;
+		channel = new HdfsChannel(f.getName());
+		System.out.println("****************************");
+		System.out.println(channel.getFullFileName());
+		System.out.println("****************************");
+		
+		channelSize = channel.size();
+		in = null;
+		fillBuffer();
+		postInitialize();
 	}
-
 	/**
 	 * Creates FLV reader from file channel.
 	 *
 	 * @param channel
 	 * @throws IOException on error
 	 */
+	
 	public FLVReader(FileChannel channel) throws IOException {
+		/*
 		if (null == channel) {
 			log.warn("Reader was passed a null channel");
 			log.debug("{}", org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString(this));
@@ -185,8 +218,8 @@ public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer
 		}
 		fillBuffer();
 		postInitialize();
+		*/
 	}
-
 	/**
 	 * Accepts mapped file bytes to construct internal members.
 	 *
@@ -627,7 +660,7 @@ public class FLVReader implements IoConstants, ITagReader, IKeyFrameDataAnalyzer
 		if (channel != null) {
 			try {
 				channel.close();
-				fis.close();
+				//fis.close();
 			} catch (IOException e) {
 				log.error("FLVReader :: close ::>\n", e);
 			}
